@@ -1,15 +1,20 @@
 import React, {Component, PropTypes} from 'react';
+import UserActions from '../actions/UserActions';
 
 export default class SearchBar extends Component {
+    static _onKeyUp = (e) => {
+        UserActions.setSearchInput(e.target.value);
+    };
+
     render() {
         return (
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="searchbar form-group" data-reactid=".0.0.0.0">
-                        <input value="" type="text"
+                    <div class="searchbar form-group">
+                        <input type="text"
                                class="form-control"
                                placeholder="Search people by name..."
-                               data-reactid=".0.0.0.0.0"/>
+                               onKeyUp={SearchBar._onKeyUp}/>
                     </div>
                 </div>
             </div>

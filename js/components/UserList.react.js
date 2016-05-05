@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {EventEmitter} from "events";
+import UserData from "../components/UserData.react";
 
 export default class UserList extends Component {
     render() {
@@ -15,28 +16,11 @@ export default class UserList extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>
-                            <img src="images/dog.svg" class="user-image"/>
-                        </td>
-                        <td>Alvin Neal</td>
-                        <td>18</td>
-                        <td>
-                            <span>8</span>
-                            <span>(854) 235-3326</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="images/raccoon.svg" class="user-image"/>
-                        </td>
-                        <td>Leila Smith</td>
-                        <td>18</td>
-                        <td>
-                            <span>8</span>
-                            <span>(413) 435-6719</span>
-                        </td>
-                    </tr>
+                    {this.props.allUsers.map((user, index) => {
+                        return (
+                            <UserData key={user.id} user={user} userIndex={index}/>
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>

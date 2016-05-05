@@ -1,12 +1,16 @@
-import ServerActionCreators from './actions/ServerActionCreator';
+import ServerActionCreator from './actions/ServerActionCreator';
 
-function post(url) {
-    $.ajax({url: url,
-        success: function(data) {
-            ServerActionCreators.receiveData(data);
-        },
-        error: function(xhr, status, err) {
-            ServerActionCreators.receiveAPIError({ err: err });
-        }
-    });
-}
+const ServerAPI = {
+    receiveData() {
+        fetch('./data.json')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                ServerActionCreator.receiveData(data);
+            })
+            .catch(ServerActionCreator.receiveAPIError);
+    }
+};
+
+export default ServerAPI;
