@@ -1,21 +1,11 @@
-# Пилотный выпуск React Challenge: сортировка и поиск данных
+# React Challenge: data sort and searching
 
-[Статья на сайте](http://jsraccoon.ru/react-challenge-sort-and-search)
+To start run the following:
 
-[Демо приложения](http://rtivital.github.io/react-challenge-sort-and-search-solution/)
+* run `npm install`
+* run `gulp`
 
-Что делать:
+## gulp tasks
 
-* Форкнуть этот репозиторий
-* Склонировать свой форк `git clone https://github.com/<ваш_аккаунт_на_гитхабе>/react-challenge-sort-and-search`
-* Открыть папку `cd react-challenge-sort-and-search`
-* Установить все зависимости `npm install`
-* Запустить галп `gulp`
-* Вы восхитительны и готовы к челенджу!
-
-## Таски для галпа
-
-* Дефолтный (просто `gulp`): запускает browsersync и решрешит при изменении js, css и html. Браузер должен открыть самостоятельно.
-* Деплой (`gulp deploy`): пушит всё, что находится в папке `public` в ветку `gh-pages`. В результате сайт можно показать другу
-
-## Удачи!
+* `gulp`: runs browsersync and watches for js, css и html changes.
+* `gulp deploy`: push all stuff in `public` folder to the branch `gh-pages`.
