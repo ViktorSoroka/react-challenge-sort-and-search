@@ -5,10 +5,9 @@ import AppAPI from '../AppAPI';
 
 let _users = [];
 let _activeSearchInput = '';
-let _activeUserIndex = 0;
-let _filteredUsers = [];
+let _activeUser = {};
 let _sort = {
-    _currentSort: {},
+    currentSort: {},
     types: {
         name: {field: 'name', order: false, active: false},
         age: {field: 'age', order: false, active: false}
@@ -16,42 +15,23 @@ let _sort = {
 };
 
 const UserStore = Object.assign(new EventEmitter, {
-
-    fetchData() {
-        AppAPI.receiveData();
-    },
-
-    sortByField(collection, sortObject) {
-        return collection.sort((a, b) => {
-            if (sortObject.order) {
-                if(a[sortObject.field] < b[sortObject.field]) return -1;
-                if(a[sortObject.field] > b[sortObject.field]) return 1;
-            } else {
-                if(a[sortObject.field] > b[sortObject.field]) return -1;
-                if(a[sortObject.field] < b[sortObject.field]) return 1;
-            }
-            return 0;
-        });
-    },
-
     setCurrentSort(name) {
-        _sort._currentSort.active = false;
-        _sort._currentSort = _sort.types[name];
-        _sort._currentSort.active = true;
-        _sort._currentSort.order = !_sort._currentSort.order;
+        _sort.currentSort.active = false;
+        _sort.currentSort = _sort.types[name];
+        _sort.currentSort.active = true;
+        _sort.currentSort.order = !_sort.currentSort.order;
     },
 
-    getSortTypes() {
-        return _sort.types;
+    getSortData() {
+        return _sort;
     },
 
-    getActiveUserIndex() {
-        return _activeUserIndex;
+    getActiveUser() {
+        return _activeUser;
     },
 
-    setActiveUserIndex(index = 0) {
-        _sort._currentSort = {};
-        _activeUserIndex = index;
+    setActiveUser(user) {
+        _activeUser = user;
     },
 
     addChangeListener(callback) {
@@ -75,37 +55,25 @@ const UserStore = Object.assign(new EventEmitter, {
     },
 
     getAllUsers() {
-        if (!_activeSearchInput) {
-            _filteredUsers = _users;
-        } else {
-            const reg = new RegExp(`^${_activeSearchInput}`, 'i');
-            _filteredUsers = _users.filter(user => {
-                return user.name.match(reg)
-            });
-        }
-
-        if (_sort._currentSort.field) {
-            _filteredUsers = this.sortByField(_filteredUsers, _sort._currentSort);
-        }
-
-        return _filteredUsers;
-    },
-
-    getActiveUser() {
-        return _filteredUsers[_activeUserIndex];
+        return _users;
     }
+
 });
 
 Dispatcher.register(action => {
     switch (action.actionType) {
-        case ActionTypes.INITIALIZE:
+        case ActionTypes.USERS_FETCH:
             // initialization goes here - to add some loading image
             break;
-        case ActionTypes.RECEIVE_API_ERROR:
+        case ActionTypes.USERS_INFO_RECIEVE_BEFORE:
             // error handling goes here
             break;
-        case ActionTypes.RECEIVE_DATA:
-            _users = _filteredUsers = _users.concat(action.data);
+        case ActionTypes.USERS_INFO_RECIEVE_ERROR:
+            // error handling goes here
+            break;
+        case ActionTypes.USERS_INFO_RECIEVE:
+            _users = _users.concat(action.data);
+            UserStore.setActiveUser(_users[0]);
             UserStore.emitChange();
             break;
         case ActionTypes.SET_ACTIVE_SORT:
@@ -114,11 +82,10 @@ Dispatcher.register(action => {
             break;
         case ActionTypes.SET_USER_INPUT:
             UserStore.setSearchValue(action.newSearchValue);
-            UserStore.setActiveUserIndex();
             UserStore.emitChange();
             break;
         case ActionTypes.SET_ACTIVE_USER:
-            UserStore.setActiveUserIndex(action.newCurrentIndex);
+            UserStore.setActiveUser(action.newCurrentUser);
             UserStore.emitChange();
             break;
     }

@@ -2,14 +2,14 @@ import React, {Component, PropTypes} from 'react';
 import UserActions from "../actions/UserActions";
 
 export default class UserData extends Component {
-    static _onClick(userId) {
-        UserActions.setActiveUser(userId);
+    static _onClick(user) {
+        UserActions.setActiveUser(user);
     };
 
     render() {
-        const {user, userIndex} = this.props;
+        const {user} = this.props;
         return (
-            <tr onClick={UserData._onClick.bind(this, userIndex)}>
+            <tr onClick={UserData._onClick.bind(this, user)}>
                 <td>
                     <img src={`images/${user.image}.svg`} class="user-image"/>
                 </td>

@@ -7,7 +7,7 @@ export default class ToolBar extends Component {
     }
 
     render() {
-        let sortTypes = this.props.sortTypes;
+        let {sortTypes} = this.props;
         return (
             <div class="row">
                 <div class="col-sm-12">

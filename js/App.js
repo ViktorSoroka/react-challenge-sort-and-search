@@ -4,19 +4,23 @@ import SearchBar from './components/SearchBar.react';
 import ToolBar from './components/ToolBar.react';
 import UserList from './components/UserList.react';
 import UserStore from './stores/UserStore';
-import InitializeActions from './actions/InitializeActions';
+import ServerActions from './actions/ServerActions';
 
 export default class App extends Component {
-    constructor(props) {
-        super(props);
-        InitializeActions.initApp();
-        UserStore.addChangeListener(this._onChange);
-        this.state = {
-            sortTypes: UserStore.getSortTypes(),
+    static getStoreState = () => {
+        return {
+            sortData: UserStore.getSortData(),
             allUsers: UserStore.getAllUsers(),
             searchInput: UserStore.getSearchValue(),
-            activeUserIndex: UserStore.getActiveUserIndex()
+            activeUser: UserStore.getActiveUser()
         };
+    };
+
+    constructor(props) {
+        super(props);
+        ServerActions.getUsersData();
+        UserStore.addChangeListener(this._onChange);
+        this.state = App.getStoreState();
     }
 
     componentWillUnmount() {
@@ -24,22 +28,17 @@ export default class App extends Component {
     }
 
     _onChange = () => {
-        this.setState({
-            sortTypes: UserStore.getSortTypes(),
-            allUsers: UserStore.getAllUsers(),
-            searchInput: UserStore.getSearchValue(),
-            activeUserIndex: UserStore.getActiveUserIndex()
-        });
+        this.setState(App.getStoreState());
     };
 
     render() {
         return (
             <div class="app container-fluid">
                 <SearchBar searchInput={this.state.searchInput}/>
-                <ToolBar sortTypes={this.state.sortTypes}/>
+                <ToolBar sortTypes={this.state.sortData.types}/>
                 <div class="row">
-                    <ActiveUser activeUserIndex={this.state.activeUserIndex}/>
-                    <UserList allUsers={this.state.allUsers}/>
+                    <ActiveUser activeUser={this.state.activeUser}/>
+                    <UserList searchInput={this.state.searchInput} allUsers={this.state.allUsers} sortData={this.state.sortData}/>
                 </div>
             </div>
         );

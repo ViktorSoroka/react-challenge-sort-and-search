@@ -5,7 +5,7 @@ const UserActions = {
     setActiveUser(index) {
         Dispatcher.dispatch({
             actionType: ActionTypes.SET_ACTIVE_USER,
-            newCurrentIndex: index
+            newCurrentUser: index
         });
     },
     setSearchInput(input) {
