@@ -24,12 +24,6 @@ const ServerActionCreators = {
                     data: errMsg
                 });
             });
-    },
-    receiveAPIError: function (err) {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.RECEIVE_API_ERROR,
-            err: err
-        });
     }
 };
 

@@ -9,6 +9,8 @@ import ServerActions from './actions/ServerActions';
 export default class App extends Component {
     static getStoreState = () => {
         return {
+            isServerError: UserStore.isServerError(),
+            isDataLoading: UserStore.isDataLoading(),
             sortData: UserStore.getSortData(),
             allUsers: UserStore.getAllUsers(),
             searchInput: UserStore.getSearchValue(),
@@ -32,13 +34,26 @@ export default class App extends Component {
     };
 
     render() {
+        let {isServerError, isDataLoading, searchInput, sortData, activeUser, allUsers} = this.state;
+        if (isServerError) {
+            return (<div class="container">
+                <h1>Server error</h1>
+                <p><strong>Looks like something went wrong!</strong></p>
+                <p>Try to refresh the page.</p>
+            </div>);
+        }
+
+        if (isDataLoading) {
+            return (<div class="loader">Loading...</div>);
+        }
+
         return (
             <div class="app container-fluid">
-                <SearchBar searchInput={this.state.searchInput}/>
-                <ToolBar sortTypes={this.state.sortData.types}/>
+                <SearchBar searchInput={searchInput}/>
+                <ToolBar sortTypes={sortData.types}/>
                 <div class="row">
-                    <ActiveUser activeUser={this.state.activeUser}/>
-                    <UserList searchInput={this.state.searchInput} allUsers={this.state.allUsers} sortData={this.state.sortData}/>
+                    <ActiveUser activeUser={activeUser}/>
+                    <UserList searchInput={searchInput} allUsers={allUsers} sortData={sortData}/>
                 </div>
             </div>
         );
