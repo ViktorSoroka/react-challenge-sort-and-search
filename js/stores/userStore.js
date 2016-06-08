@@ -4,6 +4,8 @@ import EventEmitter from 'events';
 import AppAPI from '../AppAPI';
 
 let _users = [];
+let _isLoading = true;
+let _isServerError = false;
 let _activeSearchInput = '';
 let _activeUser = {};
 let _sort = {
@@ -20,6 +22,14 @@ const UserStore = Object.assign(new EventEmitter, {
         _sort.currentSort = _sort.types[name];
         _sort.currentSort.active = true;
         _sort.currentSort.order = !_sort.currentSort.order;
+    },
+
+    isDataLoading() {
+        return _isLoading;
+    },
+
+    isServerError() {
+        return _isServerError;
     },
 
     getSortData() {
@@ -62,16 +72,17 @@ const UserStore = Object.assign(new EventEmitter, {
 
 Dispatcher.register(action => {
     switch (action.actionType) {
-        case ActionTypes.USERS_FETCH:
-            // initialization goes here - to add some loading image
-            break;
         case ActionTypes.USERS_INFO_RECIEVE_BEFORE:
-            // error handling goes here
+            _isLoading = true;
+            UserStore.emitChange();
             break;
         case ActionTypes.USERS_INFO_RECIEVE_ERROR:
-            // error handling goes here
+            _isLoading = false;
+            _isServerError = true;
+            UserStore.emitChange();
             break;
         case ActionTypes.USERS_INFO_RECIEVE:
+            _isLoading = false;
             _users = _users.concat(action.data);
             UserStore.setActiveUser(_users[0]);
             UserStore.emitChange();
